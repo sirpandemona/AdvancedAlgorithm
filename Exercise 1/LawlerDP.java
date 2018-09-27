@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class LawlerDP {
 	private int numJobs;
@@ -14,5 +16,16 @@ public class LawlerDP {
 		//magic happens here
 		
 		return bestSchedule;
+	}
+	
+	public List<int[]> generateStates(int i, int j, int k, int t) {
+		List<int[]> L = new ArrayList<int[]>();
+		return L;
+	}
+	
+	public int SequenceJobs() {		
+		int result = 0;
+		
+		return result;
 	}
 }
