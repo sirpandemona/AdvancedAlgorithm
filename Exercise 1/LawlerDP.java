@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -6,30 +7,36 @@ import java.util.Set;
 public class LawlerDP {
 	private int numJobs;
 	private int[][] jobs;
+	private HashMap<int[],ArrayList<int[]>> states;
 	
 	public LawlerDP(ProblemInstance instance) {
 		numJobs = instance.getNumJobs();
-		jobs = instance.getJobs();		
+		jobs = instance.getJobs();
+		states = new HashMap<int[],ArrayList<int[]>>();
 	}
 	
 	public Schedule getSchedule() {
 		Schedule bestSchedule = null;
-		
+			
 		//magic happens here
-		
+		ArrayList<int[]> states = generateStates(0,numJobs-1,retrieveK(),0);
+		System.out.print(states);
 		return bestSchedule;
 	}
 	
-	public List<int[]> generateStates(int i, int j, int k, int t) {
-		List<int[]> L = new ArrayList<int[]>();
+	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
+		int [] state = {i,j,k,t};
+		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
 			return L;
 		}
 		else if(S.size() == 1){
-			int [] job = {i,j,k,t};
-			L.add(job);
+			L.add(state);
 			return L;
+		}
+		if(states.containsKey(state)){
+			return states.get(state);
 		}
 		
 		int delta = numJobs-k;
@@ -46,6 +53,7 @@ public class LawlerDP {
 			L.addAll(generateStates(i,kPrime+d,kPrime,t));
 			L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
 		}
+		states.put(state,L);
 		return L;
 	}
 	
@@ -71,6 +79,19 @@ public class LawlerDP {
 			}
 		}
 		return kPrime;
+	}
+	
+	public int retrieveK() {
+		int k =0;
+		int val = 0;
+		for(int j = 0; j < numJobs;j++) {
+			if(jobs[j][0] > val) {
+				k = j;
+				val  = jobs[j][0] ;
+			}
+		}
+		return k;
+		
 	}
 	
 	public int retrieveStartingTime(ArrayList<Integer> S, int delta, int t) {
