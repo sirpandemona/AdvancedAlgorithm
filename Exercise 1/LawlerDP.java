@@ -5,12 +5,12 @@ import java.util.List;
 public class LawlerDP {
 	private int numJobs;
 	private int[][] jobs;
-	private HashMap<int[],ArrayList<int[]>> states;
+	private HashMap<String,ArrayList<int[]>> states;
 	
 	public LawlerDP(ProblemInstance instance) {
 		numJobs = instance.getNumJobs();
 		jobs = instance.getJobs();
-		states = new HashMap<int[],ArrayList<int[]>>();
+		states = new HashMap<String,ArrayList<int[]>>();
 	}
 	
 	public Schedule getSchedule() {
@@ -24,6 +24,7 @@ public class LawlerDP {
 	
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
+		String key  = i + " - " + j + " - "+ k + " - "+t;
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
@@ -33,17 +34,20 @@ public class LawlerDP {
 			L.add(state);
 			return L;
 		}
-		if(states.containsKey(state)){
-			return states.get(state);
+		if(states.containsKey(key)){
+			return states.get(key);
 		}
 		
-		int delta = numJobs-k;
+		int delta = (numJobs-k)-1;
+		int kPrime = retrieveKPrime(S);
+		if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
 		for(int d = 0; d<= delta;d++) {
-			int kPrime = retrieveKPrime(S);
+			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
+			ArrayList<Integer> left = retrieveSubset(i,kPrime+d,kPrime);
 			int[] sLeft = {i,kPrime+d,kPrime,t};
 			
-			ArrayList<Integer> right = retrieveSubset(kPrime+d+1, j, kPrime);
-			int cRight = retrieveStartingTime(right, delta,t);			
+			//ArrayList<Integer> right = retrieveSubset(kPrime+d+1, j, kPrime);
+			int cRight = retrieveStartingTime(left,t);			
 			int[] sRight = {kPrime+d+1, j, kPrime,cRight};
 			
 			L.add(sLeft);
@@ -51,15 +55,17 @@ public class LawlerDP {
 			L.addAll(generateStates(i,kPrime+d,kPrime,t));
 			L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
 		}
-		states.put(state,L);
+		states.put(key,L);
 		return L;
 	}
 	
 	public ArrayList<Integer> retrieveSubset(int i, int j, int k) {
 		ArrayList<Integer> res = new ArrayList<Integer>(); 
+		if(i> j) {return res;}
+		if(j> numJobs) {j = numJobs;}
 		int valueK = jobs[k][0];
 		for(int a =i; a<j;a++) {
-			if(jobs[a][0] <= valueK) {
+			if(jobs[a][0] <= valueK && a!=k) {
 				res.add(a);
 			}
 		}
@@ -92,12 +98,12 @@ public class LawlerDP {
 		
 	}
 	
-	public int retrieveStartingTime(ArrayList<Integer> S, int delta, int t) {
+	public int retrieveStartingTime(ArrayList<Integer> S, int t) {
 		int time = t;
 		for(int a = 0; a < S.size();a++) {
 			int j = S.get(a);
 			int p_j = jobs[j][0];
-			t+= p_j;
+			time+= p_j;
 		}
 		return time;
 	}
