@@ -76,6 +76,8 @@ public class ComputeTardiness {
 		Schedule bestFirstSchedule = bestFirst.getSchedule();
 		System.out.println(bestFirstSchedule.getTardiness());
 		LawlerDP Lawler =new LawlerDP(instance);
-		Schedule LawlerSchedule = Lawler.getSchedule();
+		int LawlerTardiness = Lawler.SequenceJobs();
+		System.out.println(LawlerTardiness);
+		//Schedule LawlerSchedule = Lawler.getSchedule();
     }
 }

@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,18 +15,32 @@ public class LawlerDP {
 		states = new HashMap<String,ArrayList<int[]>>();
 	}
 	
+	public void sortJobsByDueTime() {
+		Arrays.sort(jobs, new Comparator<int[]>() {
+			
+			public int compare(int[] j1, int[] j2) {
+				Integer dd1 = j1[1];
+				Integer dd2 = j2[1];
+				// reverse sort on quantity
+				return dd1.compareTo(dd2);
+			}
+		});
+	}
+	
 	public Schedule getSchedule() {
 		Schedule bestSchedule = null;
 			
 		//magic happens here
-		ArrayList<int[]> states = generateStates(0,numJobs-1,retrieveK(),0);
-		System.out.print(states);
+		sortJobsByDueTime();
+		ArrayList<int[]> states = generateStates(0,numJobs-1,-1,0);
+		//System.out.print(states);
 		return bestSchedule;
 	}
 	
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
+		System.out.println(key);;
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
@@ -63,7 +79,10 @@ public class LawlerDP {
 		ArrayList<Integer> res = new ArrayList<Integer>(); 
 		if(i> j) {return res;}
 		if(j> numJobs) {j = numJobs;}
-		int valueK = jobs[k][0];
+		int valueK = Integer.MAX_VALUE;
+		if(k>-1) {
+			valueK = jobs[k][0];
+		}
 		for(int a =i; a<j;a++) {
 			if(jobs[a][0] <= valueK && a!=k) {
 				res.add(a);
@@ -85,19 +104,6 @@ public class LawlerDP {
 		return kPrime;
 	}
 	
-	public int retrieveK() {
-		int k =0;
-		int val = 0;
-		for(int j = 0; j < numJobs;j++) {
-			if(jobs[j][0] > val) {
-				k = j;
-				val  = jobs[j][0] ;
-			}
-		}
-		return k;
-		
-	}
-	
 	public int retrieveStartingTime(ArrayList<Integer> S, int t) {
 		int time = t;
 		for(int a = 0; a < S.size();a++) {
@@ -109,8 +115,8 @@ public class LawlerDP {
 	}
 	
 	public int SequenceJobs() {		
-		
-		List<int[]> L = generateStates(0, jobs.length, 0, 0);
+		sortJobsByDueTime();
+		List<int[]> L = generateStates(0, jobs.length, -1, 0);
 		
 		HashMap<int[],Integer> T = new HashMap<int[],Integer>();
 		
