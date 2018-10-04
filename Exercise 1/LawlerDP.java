@@ -38,6 +38,23 @@ public class LawlerDP {
 		return bestSchedule;
 	}
 	
+	public ArrayList<int[]> generateStatesIt(){
+		int[] startState = {0,jobs.length-1,-1,0};
+		ArrayList<int[]> queue = new ArrayList<int[]>();
+		queue.add(startState);
+		int idx = 0;
+		while(idx != queue.size()) {
+			int[] S = queue.get(idx);
+			int i = S[0];
+			int j = S[1];
+			int k = S[2];
+			int t = S[3];
+			queue.addAll(generateStates(i,j,k,t));
+			idx++;
+		}
+		return queue;
+	}
+	
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
@@ -45,14 +62,15 @@ public class LawlerDP {
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
-			L.add(state);
+			//L.add(state);
 			return L;
 		}
 		else if(S.size() == 1){
-			L.add(state);
+			//L.add(state);
 			return L;
 		}
 		if(states.containsKey(key)){
+			//System.out.println("Got state: "+ key);
 			return states.get(key);
 		}
 		
@@ -70,8 +88,8 @@ public class LawlerDP {
 			
 			L.add(sLeft);
 			L.add(sRight);
-			L.addAll(generateStates(i,kPrime+d,kPrime,t));
-			L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
+			//L.addAll(generateStates(i,kPrime+d,kPrime,t));
+			//L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
 		}
 		states.put(key,L);
 		return L;
@@ -120,9 +138,10 @@ public class LawlerDP {
 		sortJobsByDueTime();
 		System.out.println("Generate States:");
 		int[] startState = {0,jobs.length-1,-1,0};
-		ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
+		//ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
+		ArrayList<int[]>L = generateStatesIt();
 		Collections.reverse(L);
-		L.add(startState);
+		//L.add(startState);
 		HashMap<String,Integer> T = new HashMap<String,Integer>();
 		
 		System.out.println("Dynamic:");
