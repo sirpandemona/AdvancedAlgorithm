@@ -61,7 +61,7 @@ public class LawlerDP {
 		if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
 		for(int d = 0; d<= delta;d++) {
 			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
-			ArrayList<Integer> left = retrieveSubset(i,kPrime+d,kPrime);
+			ArrayList<Integer> left = retrieveSubset(i,kPrime+d,k);
 			int[] sLeft = {i,kPrime+d,kPrime,t};
 			
 			//ArrayList<Integer> right = retrieveSubset(kPrime+d+1, j, kPrime);
