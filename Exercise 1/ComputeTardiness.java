@@ -68,16 +68,26 @@ public class ComputeTardiness {
     
     public static void runTest(String filename) {
     	ProblemInstance instance = readInstance(filename);
+    	int problemSize = instance.getNumJobs();
+    	System.out.println("Problem of size: "+problemSize);
     	Greedy greedy = new Greedy(instance);
+    	long greedyStart = System.nanoTime();
 		Schedule greedySchedule = greedy.getSchedule();
-		System.out.println(greedySchedule.getTardiness());
+		long greedyEnd = System.nanoTime();
+		System.out.println("Greedy result: "+greedySchedule.getTardiness()+" in time: "+(greedyEnd-greedyStart) + " nanosec ");
 		
 		BestFirst bestFirst = new BestFirst(instance);
+    	long bfStart = System.nanoTime();
 		Schedule bestFirstSchedule = bestFirst.getSchedule();
-		System.out.println(bestFirstSchedule.getTardiness());
+		long bfEnd = System.nanoTime();
+
+		System.out.println("Best First result: "+bestFirstSchedule.getTardiness()+" in time: "+(bfEnd-bfStart) + " nanosec ");
 		LawlerDP Lawler =new LawlerDP(instance);
+		long lawStart = System.nanoTime();
 		int LawlerTardiness = Lawler.SequenceJobs();
-		System.out.println(LawlerTardiness);
+		long lawEnd = System.nanoTime();
+
+		System.out.println("Lawler result: "+LawlerTardiness+ "in time: "+(lawEnd-lawStart)+ " nanosec ");
 		//Schedule LawlerSchedule = Lawler.getSchedule();
     }
 }
