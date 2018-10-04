@@ -128,10 +128,10 @@ public class LawlerDP {
 			int oldk = S[2];
 			int t = S[3];
 			int k = retrieveKPrime(retrieveSubset(i,j,oldk));
-			if(j-i == 0) {
+			if(i > j) {
 				T.put(S,0);
 			}
-			if(j-i == 1) {
+			if(i == j) {
 				T.put(S, Math.max(0,t+jobs[i][0]-jobs[i][1]));
 			}
 			T.put(S, Integer.MAX_VALUE);
