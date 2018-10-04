@@ -55,6 +55,50 @@ public class LawlerDP {
 		return queue;
 	}
 	
+	public boolean noTardyJob(ArrayList<Integer> subset, int t)
+	{
+		int C = t;
+		for(int job : subset) {
+			C += jobs[job][0];
+			if(jobs[job][1] > C)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public int allTardyJobs(ArrayList<Integer> subset, int t)
+	{
+		int C = t;
+		int T = 0;
+		for(int job : subset) {
+			C += jobs[job][0];
+			if(jobs[job][1] < C)
+			{
+				return 0;
+			}
+			T += jobs[job][1] - C;
+		}
+		return T;
+	}
+	
+	public int shortcut(int i, int j, int k, int t)
+	{
+		ArrayList<Integer> subset = retrieveSubset(i,j,k);
+		if(subset.size() > 0 && t + jobs[subset.get(0)][0] > jobs[subset.get(0)][1]) {
+			int T = allTardyJobs(subset,t);
+			if(T > 0) {
+				return T;
+			}
+		} else {
+			if(noTardyJob(subset,t)) {
+				return 0;
+			}
+		}
+		return -1;
+	}
+	
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
@@ -80,16 +124,33 @@ public class LawlerDP {
 		for(int d = 0; d<= delta;d++) {
 			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
 			ArrayList<Integer> left = retrieveSubset(i,kPrime+d,k);
-			int[] sLeft = {i,kPrime+d,kPrime,t};
+			
+			int shortcutleft = -1;//shortcut(i,kPrime+d,kPrime,t);
+			
+			if(shortcutleft != -1) {
+				int[] sLeft = {i,kPrime+d,kPrime,t,shortcutleft};
+				L.add(sLeft);
+			} else {
+				int[] sLeft = {i,kPrime+d,kPrime,t};
+				L.add(sLeft);
+			}
 			
 			//ArrayList<Integer> right = retrieveSubset(kPrime+d+1, j, kPrime);
 			int cRight = retrieveStartingTime(left,t);			
-			int[] sRight = {kPrime+d+1, j, kPrime,cRight};
 			
-			L.add(sLeft);
-			L.add(sRight);
+			int shortcutright = -1;//shortcut(kPrime+d+1, j, kPrime,cRight);
+			
+			if(shortcutright != -1) {
+				int[] sRight = {kPrime+d+1, j, kPrime,cRight,shortcutright};
+				L.add(sRight);
+			} else {
+				int[] sRight = {kPrime+d+1, j, kPrime,cRight};
+				L.add(sRight);
+			}
+			
 			//L.addAll(generateStates(i,kPrime+d,kPrime,t));
 			//L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
+			
 		}
 		states.put(key,L);
 		return L;
@@ -161,6 +222,9 @@ public class LawlerDP {
 			else if(subset.size() == 1) {
 				int index = subset.get(0);
 				T.put(key, Math.max(0,t+jobs[index][0]-jobs[index][1]));
+			}
+			else if(S.length > 4) {
+				T.put(key, S[4]);
 			}
 			else {
 				T.put(key, Integer.MAX_VALUE);
