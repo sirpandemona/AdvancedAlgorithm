@@ -56,9 +56,9 @@ public class LawlerDP {
 			return states.get(key);
 		}
 		
-		int delta = (numJobs-k);
 		int kPrime = retrieveKPrime(S);
-		if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
+		int delta = (numJobs-kPrime);
+		//if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
 		for(int d = 0; d<= delta;d++) {
 			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
 			ArrayList<Integer> left = retrieveSubset(i,kPrime+d,k);
@@ -145,7 +145,7 @@ public class LawlerDP {
 			}
 			else {
 				T.put(key, Integer.MAX_VALUE);
-				for(int delta = 0; delta < j-k; delta++) {
+				for(int delta = 0; delta <= j-k; delta++) {
 					int C = t;
 					for(int index : subset) {
 						if(index <= k+delta) {
