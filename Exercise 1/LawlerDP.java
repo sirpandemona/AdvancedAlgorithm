@@ -132,20 +132,23 @@ public class LawlerDP {
 			int t = S[3];
 			ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
 			int k = retrieveKPrime(subset);
-			String key = i + " - " + j + " - " + k + " - " + t;
+			String key = i + " - " + j + " - " + oldk + " - " + t;
 			System.out.println(key);
 			if(subset.size() < 1) {
 				T.put(key,0);
 			}
 			else if(subset.size() == 1) {
-				T.put(key, Math.max(0,t+jobs[i][0]-jobs[i][1]));
+				int index = subset.get(0);
+				T.put(key, Math.max(0,t+jobs[index][0]-jobs[index][1]));
 			}
 			else {
 				T.put(key, Integer.MAX_VALUE);
 				for(int delta = 0; delta < j-k; delta++) {
 					int C = t;
-					for(int[] job : jobs) {
-						C += job[0];
+					for(int index : subset) {
+						if(index <= k+delta) {
+							C += jobs[index][0];
+						}
 					}
 					T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
 												 		Math.max(0, C - jobs[k][1])									+
