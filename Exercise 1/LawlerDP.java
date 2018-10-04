@@ -8,12 +8,14 @@ import java.util.List;
 public class LawlerDP {
 	private int numJobs;
 	private int[][] jobs;
+	private HashMap<String,ArrayList<Integer>> jobMapping;
 	private HashMap<String,ArrayList<int[]>> states;
 	
 	public LawlerDP(ProblemInstance instance) {
 		numJobs = instance.getNumJobs();
 		jobs = instance.getJobs();
 		states = new HashMap<String,ArrayList<int[]>>();
+		jobMapping = new HashMap<String,ArrayList<Integer>>();
 	}
 	
 	public void sortJobsByDueTime() {
@@ -41,6 +43,9 @@ public class LawlerDP {
 	public ArrayList<int[]> generateStatesIt(){
 		int[] startState = {0,jobs.length-1,-1,0};
 		ArrayList<int[]> queue = new ArrayList<int[]>();
+		ArrayList<Integer> order = new ArrayList<Integer>();
+		HashMap<String,Integer> jobOrderMapping = new HashMap<String,Integer>();
+		
 		queue.add(startState);
 		int idx = 0;
 		while(idx != queue.size()) {
@@ -49,7 +54,20 @@ public class LawlerDP {
 			int j = S[1];
 			int k = S[2];
 			int t = S[3];
-			queue.addAll(generateStates(i,j,k,t));
+			String key  = i + " - " + j + " - "+ k + " - "+t;
+			if(jobOrderMapping.containsKey(key)){
+				int dept = states.get(key).size();
+				int orderidx = jobOrderMapping.get(key);
+				for (int a = orderidx; a<dept;a++) {
+					order.set(orderidx+a, idx+a);
+				}
+			}
+			else 
+			{
+				queue.addAll(generateStates(i,j,k,t));
+				jobOrderMapping.put(key,idx);
+				System.out.println("idx: "+idx +" sizeQueue"+queue.size());
+			}
 			idx++;
 		}
 		return queue;
@@ -62,11 +80,11 @@ public class LawlerDP {
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
-			//L.add(state);
+			L.add(state);
 			return L;
 		}
 		else if(S.size() == 1){
-			//L.add(state);
+			L.add(state);
 			return L;
 		}
 		if(states.containsKey(key)){
@@ -88,14 +106,18 @@ public class LawlerDP {
 			
 			L.add(sLeft);
 			L.add(sRight);
-			//L.addAll(generateStates(i,kPrime+d,kPrime,t));
-			//L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
+			L.addAll(generateStates(i,kPrime+d,kPrime,t));
+			L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
 		}
 		states.put(key,L);
 		return L;
 	}
 	
 	public ArrayList<Integer> retrieveSubset(int i, int j, int k) {
+		String key = i+" - "+j+" - "+k;
+		if (jobMapping.containsKey(key)){
+			return jobMapping.get(key);
+		}
 		ArrayList<Integer> res = new ArrayList<Integer>(); 
 		if(i> j) {return res;}
 		if(j>= numJobs) {j = numJobs-1;}
@@ -108,6 +130,7 @@ public class LawlerDP {
 				res.add(a);
 			}
 		}
+		jobMapping.put(key,res);
 		return res;
 	}
 	
@@ -138,10 +161,10 @@ public class LawlerDP {
 		sortJobsByDueTime();
 		System.out.println("Generate States:");
 		int[] startState = {0,jobs.length-1,-1,0};
-		//ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
-		ArrayList<int[]>L = generateStatesIt();
+		ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
+		//ArrayList<int[]>L = generateStatesIt();
 		Collections.reverse(L);
-		//L.add(startState);
+		L.add(startState);
 		HashMap<String,Integer> T = new HashMap<String,Integer>();
 		
 		System.out.println("Dynamic:");
