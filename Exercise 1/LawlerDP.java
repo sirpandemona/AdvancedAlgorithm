@@ -45,6 +45,7 @@ public class LawlerDP {
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
+			L.add(state);
 			return L;
 		}
 		else if(S.size() == 1){
