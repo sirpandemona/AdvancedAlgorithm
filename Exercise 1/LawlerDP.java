@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 public class LawlerDP {
 	private int numJobs;
@@ -139,22 +138,19 @@ public class LawlerDP {
 		int kPrime = retrieveKPrime(S);
 		int delta = (numJobs-kPrime);
 		//if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
-		for(int d = 0; d<= delta;d++) {
+		int C = retrieveC(S,kPrime,t);
+		for(int d = 0; d< delta;d++) {
 			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
-			ArrayList<Integer> left = retrieveSubset(i,kPrime+d,k);
 			
-			int cRight = retrieveStartingTime(left,t);
+			C += jobs[kPrime+d][0];
 			
 			int[] sLeft = {i,kPrime+d,kPrime,t};
-			int[] sRight = {kPrime+d+1, j, kPrime,cRight};
-			
-			
-			//ArrayList<Integer> right = retrieveSubset(kPrime+d+1, j, kPrime);
+			int[] sRight = {kPrime+d+1, j, kPrime,C};
 						
 			L.add(sLeft);
 			L.add(sRight);
 			L.addAll(generateStates(i,kPrime+d,kPrime,t));
-			L.addAll(generateStates(kPrime+d+1, j, kPrime,cRight));
+			L.addAll(generateStates(kPrime+d+1, j, kPrime,C));
 		}
 		states.put(key,L);
 		return L;
@@ -194,10 +190,13 @@ public class LawlerDP {
 		return kPrime;
 	}
 	
-	public int retrieveStartingTime(ArrayList<Integer> S, int t) {
+	public int retrieveC(ArrayList<Integer> S, int kPrime, int t) {
 		int time = t;
-		for(int a = 0; a < S.size();a++) {
-			int j = S.get(a);
+		for(int j : S) {
+			if(j >= kPrime)
+			{
+				break;
+			}
 			int p_j = jobs[j][0];
 			time+= p_j;
 		}
@@ -237,13 +236,9 @@ public class LawlerDP {
 			}
 			else {
 				T.put(key, Integer.MAX_VALUE);
+				int C = retrieveC(subset,k,t);
 				for(int delta = 0; delta <= j-k; delta++) {
-					int C = t;
-					for(int index : subset) {
-						if(index <= k+delta) {
-							C += jobs[index][0];
-						}
-					}
+					C += jobs[k+delta][0];
 					T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
 												 		Math.max(0, C - jobs[k][1])									+
 												 		T.get((k+delta+1) + " - " + j + " - " + k + " - " + C)		));
