@@ -115,7 +115,7 @@ public class LawlerDP {
 		HashMap<int[],Integer> T = new HashMap<int[],Integer>();
 		
 		for(int i = 0; i < L.size(); i++) {
-			int[] S = L.get(i);
+			int[] S = L.get(i);							// S = [i,j,k,t]
 			if(S[1]-S[0] == 0) {
 				T.put(S,0);
 			}
