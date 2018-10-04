@@ -41,7 +41,7 @@ public class LawlerDP {
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
-		System.out.println(key);;
+		System.out.println(key);
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
@@ -79,12 +79,12 @@ public class LawlerDP {
 	public ArrayList<Integer> retrieveSubset(int i, int j, int k) {
 		ArrayList<Integer> res = new ArrayList<Integer>(); 
 		if(i> j) {return res;}
-		if(j> numJobs) {j = numJobs;}
+		if(j>= numJobs) {j = numJobs-1;}
 		int valueK = Integer.MAX_VALUE;
 		if(k>-1) {
 			valueK = jobs[k][0];
 		}
-		for(int a =i; a<j;a++) {
+		for(int a =i; a<=j;a++) {
 			if(jobs[a][0] <= valueK && a!=k) {
 				res.add(a);
 			}
