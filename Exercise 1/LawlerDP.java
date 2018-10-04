@@ -115,34 +115,42 @@ public class LawlerDP {
 		return time;
 	}
 	
-	public int SequenceJobs() {		
+	public int SequenceJobs() {
 		sortJobsByDueTime();
+		System.out.println("Generate States:");
 		ArrayList<int[]> L = generateStates(0, jobs.length, -1, 0);
 		Collections.reverse(L);
 		
-		HashMap<int[],Integer> T = new HashMap<int[],Integer>();
+		HashMap<String,Integer> T = new HashMap<String,Integer>();
+		
+		System.out.println("Dynamic:");
 		
 		for(int[] S : L) {							
 			int i = S[0];
 			int j = S[1];
 			int oldk = S[2];
 			int t = S[3];
-			int k = retrieveKPrime(retrieveSubset(i,j,oldk));
-			if(i > j) {
-				T.put(S,0);
+			ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
+			int k = retrieveKPrime(subset);
+			String key = i + " - " + j + " - " + k + " - " + t;
+			System.out.println(key);
+			if(subset.size() < 1) {
+				T.put(key,0);
 			}
-			if(i == j) {
-				T.put(S, Math.max(0,t+jobs[i][0]-jobs[i][1]));
+			else if(subset.size() == 1) {
+				T.put(key, Math.max(0,t+jobs[i][0]-jobs[i][1]));
 			}
-			T.put(S, Integer.MAX_VALUE);
-			for(int delta = 0; delta < j-k; delta++) {
-				int C = t;
-				for(int[] job : jobs) {
-					C += job[0];
+			else {
+				T.put(key, Integer.MAX_VALUE);
+				for(int delta = 0; delta < j-k; delta++) {
+					int C = t;
+					for(int[] job : jobs) {
+						C += job[0];
+					}
+					T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
+												 		Math.max(0, C - jobs[k][1])									+
+												 		T.get((k+delta+1) + " - " + j + " - " + k + " - " + C)		));
 				}
-				T.put(S, Math.min( T.get(S), T.get(new int[]{i,k+delta,k,t})		+
-											 Math.max(0, C - jobs[k][1])			+
-											 T.get(new int[]{k+delta+1,j,k,C})		));
 			}
 		}
 
