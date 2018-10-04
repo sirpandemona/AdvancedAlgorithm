@@ -41,7 +41,7 @@ public class LawlerDP {
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
-		System.out.println(key);
+		//System.out.println(key);
 		ArrayList<int[]> L = new ArrayList<int[]>();
 		ArrayList<Integer> S = retrieveSubset(i,j,k);
 		if(S.size() == 0) {
@@ -56,7 +56,7 @@ public class LawlerDP {
 			return states.get(key);
 		}
 		
-		int delta = (numJobs-k)-1;
+		int delta = (numJobs-k);
 		int kPrime = retrieveKPrime(S);
 		if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
 		for(int d = 0; d<= delta;d++) {
@@ -119,9 +119,10 @@ public class LawlerDP {
 	public int SequenceJobs() {
 		sortJobsByDueTime();
 		System.out.println("Generate States:");
-		ArrayList<int[]> L = generateStates(0, jobs.length, -1, 0);
+		int[] startState = {0,jobs.length-1,-1,0};
+		ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
 		Collections.reverse(L);
-		
+		L.add(startState);
 		HashMap<String,Integer> T = new HashMap<String,Integer>();
 		
 		System.out.println("Dynamic:");
@@ -134,7 +135,7 @@ public class LawlerDP {
 			ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
 			int k = retrieveKPrime(subset);
 			String key = i + " - " + j + " - " + oldk + " - " + t;
-			System.out.println(key);
+			//System.out.println(key);
 			if(subset.size() < 1) {
 				T.put(key,0);
 			}
@@ -158,6 +159,6 @@ public class LawlerDP {
 			}
 		}
 
-		return T.get(new int[]{0,jobs.length,-1,0});
+		return T.get("0 - "+(jobs.length-1)+" - -1 - 0");
 	}
 }
