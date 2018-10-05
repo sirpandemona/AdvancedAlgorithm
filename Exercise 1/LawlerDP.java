@@ -30,8 +30,7 @@ public class LawlerDP {
 	}
 	
 	public Schedule getSchedule() {
-		Schedule bestSchedule = null;
-			
+		Schedule bestSchedule = null;			
 		//magic happens here
 		sortJobsByDueTime();
 		ArrayList<int[]> states = generateStates(0,numJobs-1,-1,0);
