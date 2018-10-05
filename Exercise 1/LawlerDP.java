@@ -136,10 +136,9 @@ public class LawlerDP {
 		}
 		
 		int kPrime = retrieveKPrime(S);
-		int delta = (numJobs-kPrime);
 		//if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
 		int C = retrieveC(S,kPrime,t);
-		for(int d = 0; d< delta;d++) {
+		for(int d = 0; d <= j-kPrime;d++) {
 			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
 			
 			C += jobs[kPrime+d][0];
@@ -169,7 +168,7 @@ public class LawlerDP {
 			valueK = jobs[k][0];
 		}
 		for(int a =i; a<=j;a++) {
-			if(jobs[a][0] <= valueK && a!=k) {
+			if(jobs[a][0] < valueK || (jobs[a][0] == valueK && a < k)) {
 				res.add(a);
 			}
 		}
@@ -182,7 +181,7 @@ public class LawlerDP {
 		int val = 0;
 		for(int a = 0; a < S.size();a++) {
 			int j = S.get(a);
-			if(jobs[j][0] > val) {
+			if(jobs[j][0] >= val) {
 				kPrime = j;
 				val  = jobs[j][0] ;
 			}

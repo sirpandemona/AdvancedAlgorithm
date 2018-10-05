@@ -87,7 +87,7 @@ public class ComputeTardiness {
 		int LawlerTardiness = Lawler.SequenceJobs();
 		long lawEnd = System.nanoTime();
 
-		System.out.println("Lawler result: "+LawlerTardiness+ "in time: "+(lawEnd-lawStart)+ " nanosec ");
+		System.out.println("Lawler result: "+LawlerTardiness+ " in time: "+(lawEnd-lawStart)+ " nanosec ");
 		//Schedule LawlerSchedule = Lawler.getSchedule();
     }
 }
