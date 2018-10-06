@@ -115,6 +115,62 @@ public class LawlerDP {
 		return -1;
 	}
 	
+	public ArrayList<Integer> GenCandidateDeltas(ArrayList<Integer> S,  int t) {
+		int k = retrieveKPrime(S);
+		ArrayList<Integer> sPrime2;
+		ArrayList<Integer> deltas = new ArrayList<Integer>();
+		int dk = jobs[k][1];
+		do {
+			ArrayList<Integer> sPrime = retrieveSPrime(S,dk);		
+			int dkPrime = t;
+			for(int job : sPrime) {
+				dkPrime += jobs[job][0];
+			}
+			while(dkPrime > dk) {
+				dk = dkPrime;
+				sPrime = retrieveSPrime(S,dk);
+				dkPrime = t;
+				for(int job : sPrime) {
+					dkPrime += jobs[job][0];
+				}
+			}
+			int j = retrieveMaxJ(S,dk);
+			int delta  = j-k;
+			deltas.add(delta);
+			sPrime2 = new ArrayList<Integer>();
+			for(int job : S) {
+				if(jobs[job][1] > dk) {
+					sPrime2.add(job);
+				}
+			}
+			if(sPrime2.size() >0) {
+				int jprime = sPrime2.get(0);
+				dk = jobs[jprime][1];
+			}
+		} while(sPrime2.size() >0 );
+		return deltas;	
+	}
+	
+	public int retrieveMaxJ(ArrayList<Integer> S, int dk) {
+		int j = -1;
+		for(int job: S) {
+			if(jobs[job][1] <= dk) {
+				j = job;
+			}
+		}
+		return j;
+	}
+	
+	public ArrayList<Integer> retrieveSPrime(ArrayList<Integer>S,int dk){
+		ArrayList<Integer> sPrime = new ArrayList<Integer>();
+		for(int job : S) {
+			if(jobs[job][1] <= dk) {
+				sPrime.add(job);
+			}
+		}
+		return sPrime;
+	}
+	
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
@@ -137,7 +193,15 @@ public class LawlerDP {
 		int kPrime = retrieveKPrime(S);
 		//if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
 		int C = retrieveC(S,kPrime,t);
-		for(int d = 0; d <= j-kPrime;d++) {
+		ArrayList<Integer> deltas =  GenCandidateDeltas(S,t);
+		int prevDelta = 0;
+		for(int di  = 0;di<deltas.size();di++) {
+			int d = deltas.get(di);
+			for(int pd = prevDelta+1 ;pd<d;pd++) {
+				C += jobs[kPrime+pd][0];
+			}
+			prevDelta =d;
+		//for(int d = 0; d <= j-kPrime;d++) {
 			//System.out.println("i:"+i+"- delta:"+delta+"- d:"+d+"- j:"+j);
 			
 			C += jobs[kPrime+d][0];
@@ -235,7 +299,15 @@ public class LawlerDP {
 			else {
 				T.put(key, Integer.MAX_VALUE);
 				int C = retrieveC(subset,k,t);
-				for(int delta = 0; delta <= j-k; delta++) {
+				ArrayList<Integer> deltas =  GenCandidateDeltas(subset,t);
+				int prevDelta = 0;
+				for(int di  = 0;di<deltas.size();di++) {
+					int delta = deltas.get(di);
+					for(int pd = prevDelta+1 ;pd<delta;pd++) {
+						C += jobs[k+pd][0];
+					}
+					prevDelta =delta;
+				//for(int delta = 0; delta <= j-k; delta++) {
 					C += jobs[k+delta][0];
 					T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
 												 		Math.max(0, C - jobs[k][1])									+
