@@ -10,11 +10,18 @@ public class LawlerDP {
 	private HashMap<String,ArrayList<Integer>> jobMapping;
 	private HashMap<String,ArrayList<int[]>> states;
 	
+	private ArrayList<int[]> L;
+	private HashMap<String, Integer> jobOrderMapping;
+	private ArrayList<Integer> ordering;
+	
 	public LawlerDP(ProblemInstance instance) {
 		numJobs = instance.getNumJobs();
 		jobs = instance.getJobs();
 		states = new HashMap<String,ArrayList<int[]>>();
 		jobMapping = new HashMap<String,ArrayList<Integer>>();
+		jobOrderMapping = new HashMap<String,Integer>();
+		ordering = new ArrayList<Integer>();
+		L =new ArrayList<int[]>();
 	}
 	
 	public void sortJobsByDueTime() {
@@ -171,24 +178,26 @@ public class LawlerDP {
 		return sPrime;
 	}
 	
+	
 	public ArrayList<int[]> generateStates(int i, int j, int k, int t) {
 		int [] state = {i,j,k,t};
 		String key  = i + " - " + j + " - "+ k + " - "+t;
-		//System.out.println(key);
-		ArrayList<int[]> L = new ArrayList<int[]>();
-		ArrayList<Integer> S = retrieveSubset(i,j,k);
-		if(S.size() == 0) {
-			L.add(state);
-			return L;
-		}
-		else if(S.size() == 1){
-			L.add(state);
-			return L;
-		}
 		if(states.containsKey(key)){
 			//System.out.println("Got state: "+ key);
 			return states.get(key);
 		}
+		//System.out.println(key);
+		ArrayList<int[]> L = new ArrayList<int[]>();
+		ArrayList<Integer> S = retrieveSubset(i,j,k);
+		if(S.size() == 0) {
+			//L.add(state);
+			return L;
+		}
+		else if(S.size() == 1){
+			//L.add(state);
+			return L;
+		}
+
 		
 		int kPrime = retrieveKPrime(S);
 		//if(kPrime+delta+1 > j) { delta = j-(kPrime +1);} //prevent the
@@ -267,7 +276,7 @@ public class LawlerDP {
 	
 	public int SequenceJobs() {
 		sortJobsByDueTime();
-		System.out.println("Generate States:");
+		//System.out.println("Generate States:");
 		int[] startState = {0,jobs.length-1,-1,0};
 		ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
 		//ArrayList<int[]>L = generateStatesIt();
@@ -275,7 +284,7 @@ public class LawlerDP {
 		L.add(startState);
 		HashMap<String,Integer> T = new HashMap<String,Integer>();
 		
-		System.out.println("Dynamic:");
+	//	System.out.println("Dynamic:");
 		
 		for(int[] S : L) {							
 			int i = S[0];
