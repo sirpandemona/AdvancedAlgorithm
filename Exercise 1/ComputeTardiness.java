@@ -34,8 +34,8 @@ public class ComputeTardiness {
 	}
 
     public static void main (String args[]) {
-		ProblemInstance instance = readInstance(args[0]);
-		LawlerDP lawler = new LawlerDP(instance);
+		ProblemInstance instance = readInstance(args[1]);
+		LawlerApprox lawler = new LawlerApprox(instance,Double.parseDouble(args[0]));
 		int result =  lawler.SequenceJobs();
     	System.out.print(result);
 	}
