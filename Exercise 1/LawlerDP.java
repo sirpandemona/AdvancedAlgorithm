@@ -28,6 +28,23 @@ public class LawlerDP {
 		});
 	}
 	
+	public double totalCompletionTime() {
+		double sum = 0;
+		for(double[] job : jobs) {
+			sum += job[0];
+		}
+		return sum;
+	}
+	
+	public double smallestProcessingTime() {
+		double smallestProcessingTime = Double.MAX_VALUE;
+		for(double[] job: jobs) {
+			if(job[0] < smallestProcessingTime) {
+				smallestProcessingTime = job[0];
+			}
+		}
+		return smallestProcessingTime;
+	}
 	
 	public ArrayList<Integer> GenCandidateDeltas(ArrayList<Integer> subset,  int t) {
 		int k = retrieveKPrime(subset);
@@ -200,20 +217,93 @@ public class LawlerDP {
 			else {
 				T.put(key, Double.MAX_VALUE);
 				int C = retrieveC(subset,k,t);
-				ArrayList<Integer> deltas =  GenCandidateDeltas(subset,t);
+				ArrayList<Integer> deltas = GenCandidateDeltas(subset,t);
 				int prevDelta = 0;
 				for(int di  = 0;di<deltas.size();di++) {
 					int delta = deltas.get(di);
 					for(int pd = prevDelta+1 ;pd<delta;pd++) {
 						C += jobs[k+pd][0];
 					}
-					prevDelta =delta;
+					prevDelta = delta;
 					C += jobs[k+delta][0];
 					T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
 												 		Math.max(0, C - jobs[k][1])									+
 												 		T.get((k+delta+1) + " - " + j + " - " + k + " - " + C)		));
 				}
 			}
+		}
+
+		return T.get("0 - "+(jobs.length-1)+" - -1 - 0");
+	}
+	
+	public double SequenceJobsDynamic()
+	{
+		sortJobsByDueTime();
+		
+		HashMap<String,Double> T = new HashMap<String,Double>();
+		double totalCompletionTime = totalCompletionTime();
+		
+		ArrayList<int[]> states = new ArrayList<int[]>();
+		for(int i = 0; i < numJobs; i++)
+		{
+			for(int j = i-1; j < numJobs; j++)
+			{
+				for(int oldk = 0; oldk < numJobs; oldk++)
+				{
+					ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
+					int len = subset.size();
+					states.add(new int[]{i,j,oldk,len});
+				}
+				
+			}
+		}
+		states.sort(new Comparator<int[]>() {
+			public int compare(int[] s1, int[] s2) {
+				Integer dd1 = s1[3];
+				Integer dd2 = s2[3];
+				return dd1.compareTo(dd2);
+			}
+		});
+		states.add(new int[]{numJobs,numJobs-1,numJobs-1,0});
+		states.add(new int[]{0,numJobs-1,-1,numJobs});
+		
+		for(int[] state : states)
+		{
+			int i = state[0];
+			int j = state[1];
+			int oldk = state[2];
+			ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
+					int k = retrieveKPrime(subset);
+					for(int t = 0; t <= totalCompletionTime; t++)
+					{
+						String key = i + " - " + j + " - " + oldk + " - " + t;
+						if(subset.size() < 1) {
+							T.put(key,0.0);
+						}
+						else if(subset.size() == 1) {
+							int index = subset.get(0);
+							T.put(key, Math.max(0,t+jobs[index][0]-jobs[index][1]));
+						}
+						else {
+							T.put(key, Double.MAX_VALUE);
+							int C = retrieveC(subset,k,t);
+							ArrayList<Integer> deltas = GenCandidateDeltas(subset,t);
+							int prevDelta = 0;
+							for(int di  = 0;di<deltas.size();di++) {
+								int delta = deltas.get(di);
+								for(int pd = prevDelta+1 ;pd<delta;pd++) {
+									C += jobs[k+pd][0];
+								}
+								prevDelta = delta;
+								C += jobs[k+delta][0];
+								if(C <= totalCompletionTime) {
+									T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
+																 		Math.max(0, C - jobs[k][1])									+
+																 		T.get((k+delta+1) + " - " + j + " - " + k + " - " + C)		));
+								}
+							}
+						}
+					}
 		}
 
 		return T.get("0 - "+(jobs.length-1)+" - -1 - 0");
