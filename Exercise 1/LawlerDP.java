@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class LawlerDP {
 	private int numJobs;
-	private int[][] jobs;
+	private double[][] jobs;
 	private HashMap<String,ArrayList<Integer>> jobMapping;
 	private HashMap<String,ArrayList<int[]>> states;
 		
@@ -18,11 +18,11 @@ public class LawlerDP {
 	}
 	
 	public void sortJobsByDueTime() {
-		Arrays.sort(jobs, new Comparator<int[]>() {
+		Arrays.sort(jobs, new Comparator<double[]>() {
 			
-			public int compare(int[] j1, int[] j2) {
-				Integer dd1 = j1[1];
-				Integer dd2 = j2[1];
+			public int compare(double[] j1, double[] j2) {
+				Double dd1 = j1[1];
+				Double dd2 = j2[1];
 				return dd1.compareTo(dd2);
 			}
 		});
@@ -33,7 +33,7 @@ public class LawlerDP {
 		int k = retrieveKPrime(subset);
 		ArrayList<Integer> sPrime2;
 		ArrayList<Integer> deltas = new ArrayList<Integer>();
-		int dk = jobs[k][1];
+		double dk = jobs[k][1];
 		do {
 			ArrayList<Integer> sPrime = retrieveSPrime(subset,dk);		
 			int dkPrime = t;
@@ -65,7 +65,7 @@ public class LawlerDP {
 		return deltas;	
 	}
 	
-	public int retrieveMaxJ(ArrayList<Integer> subset, int dk) {
+	public int retrieveMaxJ(ArrayList<Integer> subset, double dk) {
 		int j = -1;
 		for(int job: subset) {
 			if(jobs[job][1] <= dk) {
@@ -75,7 +75,7 @@ public class LawlerDP {
 		return j;
 	}
 	
-	public ArrayList<Integer> retrieveSPrime(ArrayList<Integer>subset,int dk){
+	public ArrayList<Integer> retrieveSPrime(ArrayList<Integer>subset,double dk){
 		ArrayList<Integer> sPrime = new ArrayList<Integer>();
 		for(int job : subset) {
 			if(jobs[job][1] <= dk) {
@@ -133,7 +133,7 @@ public class LawlerDP {
 		ArrayList<Integer> subset = new ArrayList<Integer>(); 
 		if(i> j) {return subset;}
 		if(j>= numJobs) {j = numJobs-1;}
-		int valueK = Integer.MAX_VALUE;
+		double valueK = Double.MAX_VALUE;
 		if(k>-1) {
 			valueK = jobs[k][0];
 		}
@@ -148,7 +148,7 @@ public class LawlerDP {
 	
 	public int retrieveKPrime(ArrayList<Integer> subset) {
 		int kPrime =0;
-		int val = 0;
+		double val = 0;
 		for(int job: subset) {
 			if(jobs[job][0] >= val) {
 				kPrime = job;
@@ -165,19 +165,19 @@ public class LawlerDP {
 			{
 				break;
 			}
-			int p_j = jobs[job][0];
+			double p_j = jobs[job][0];
 			time+= p_j;
 		}
 		return time;
 	}
 	
-	public int SequenceJobs() {
+	public double SequenceJobs() {
 		sortJobsByDueTime();
 		int[] startState = {0,jobs.length-1,-1,0};
 		ArrayList<int[]> L = generateStates(0, jobs.length-1, -1, 0);
 		Collections.reverse(L);
 		L.add(startState);
-		HashMap<String,Integer> T = new HashMap<String,Integer>();
+		HashMap<String,Double> T = new HashMap<String,Double>();
 		
 		for(int[] S : L) {							
 			int i = S[0];
@@ -188,17 +188,17 @@ public class LawlerDP {
 			int k = retrieveKPrime(subset);
 			String key = i + " - " + j + " - " + oldk + " - " + t;
 			if(subset.size() < 1) {
-				T.put(key,0);
+				T.put(key,0.0);
 			}
 			else if(subset.size() == 1) {
 				int index = subset.get(0);
 				T.put(key, Math.max(0,t+jobs[index][0]-jobs[index][1]));
 			}
 			else if(S.length > 4) {
-				T.put(key, S[4]);
+				T.put(key, (double)S[4]);
 			}
 			else {
-				T.put(key, Integer.MAX_VALUE);
+				T.put(key, Double.MAX_VALUE);
 				int C = retrieveC(subset,k,t);
 				ArrayList<Integer> deltas =  GenCandidateDeltas(subset,t);
 				int prevDelta = 0;

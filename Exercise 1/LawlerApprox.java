@@ -40,7 +40,7 @@ public class LawlerApprox {
 		return maxTardiness;
 	}
 	
-	public int SequenceJobs() {
+	public double SequenceJobs() {
 		sortJobsByDueTime();
 		int maxTardiness = getTardinessMax();
 		if(maxTardiness == 0) {
