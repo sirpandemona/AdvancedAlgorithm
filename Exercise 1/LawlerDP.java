@@ -12,7 +12,7 @@ public class LawlerDP {
 		
 	public LawlerDP(ProblemInstance instance) {
 		numJobs = instance.getNumJobs();
-		jobs = instance.getJobs();
+		jobs = instance.getJobsDouble();
 		states = new HashMap<String,ArrayList<int[]>>();
 		jobMapping = new HashMap<String,ArrayList<Integer>>();
 	}
