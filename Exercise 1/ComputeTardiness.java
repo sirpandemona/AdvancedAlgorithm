@@ -112,9 +112,10 @@ public class ComputeTardiness {
 	    	Greedy greedy = new Greedy(instance);
 	    	long greedyStart = System.nanoTime();
 			Schedule greedySchedule = greedy.getSchedule();	
-			long greedyEnd = System.nanoTime();
+			long greedyEnd = System.nanoTime();	
 			res[3] = greedySchedule.getTardiness();
 			res[4] = ((greedyEnd-greedyStart)/1000);
+			if(problemSize < 11) {
 			BestFirst bestFirst = new BestFirst(instance);
 	    	long bfStart = System.nanoTime();
 			Schedule bestFirstSchedule = bestFirst.getSchedule();
@@ -122,6 +123,11 @@ public class ComputeTardiness {
 			
 			res[5] = bestFirstSchedule.getTardiness();
 			res[6] = ((bfEnd-bfStart)/1000);
+			}
+			else {
+				res[5] = Double.MAX_VALUE;
+				res[6] = Double.MAX_VALUE;
+			}
 			
 			LawlerDP Lawler =new LawlerDP(instance);
 			long lawStart = System.nanoTime();
@@ -139,6 +145,7 @@ public class ComputeTardiness {
 			res[9] = LawleraTardiness;
 			res[10] =((lawaEnd-lawaStart)/1000);
 			results[i] = res;
+			System.out.println(resultsToString(res));
 			for(int j = 0; j<11;j++) {
 				writer.append(String.valueOf(res[j])+",");
 			}
@@ -151,6 +158,14 @@ public class ComputeTardiness {
 		}
     	return results;
     }
+    
+    public static String resultsToString(double[] res) {
+    	String result = "";
+    	for(int i =0; i< res.length; i++) {
+    		result += "- "+res[i]+ ";";
+    	}
+    	return result;
+    } 
     
     public static ProblemInstance[] mutateTests(ProblemInstance instance) {
     	int size = instance.getNumJobs();
