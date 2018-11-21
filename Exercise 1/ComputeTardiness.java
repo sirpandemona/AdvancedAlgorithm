@@ -9,12 +9,12 @@ public class ComputeTardiness {
 		
 		try {
 			int numJobs = 0;
-			int[][] jobs = null;
+			double[][] jobs = null;
 			
 			Scanner sc = new Scanner(new BufferedReader(new FileReader(filename)));
 			if(sc.hasNextInt()){
 				numJobs = sc.nextInt();
-				jobs = new int[numJobs][2];
+				jobs = new double[numJobs][2];
 				int nextJobID = 0;
 			
 				while (sc.hasNextInt() && nextJobID < numJobs) {
@@ -34,10 +34,16 @@ public class ComputeTardiness {
 	}
 
     public static void main (String args[]) {
+    	args = new String[]{"1.1","instances/random_RDD=0.2_TF=0.2_#05.dat"};
 		ProblemInstance instance = readInstance(args[1]);
-		LawlerApprox lawler = new LawlerApprox(instance,Double.parseDouble(args[0]));
-		int result =  lawler.SequenceJobs();
-    	System.out.print(result);
+		
+		LawlerDP lawlerdp = new LawlerDP(instance);
+		double resultdp = lawlerdp.SequenceJobsDynamic();
+		System.out.println(resultdp);
+		
+		//LawlerApprox lawlerap = new LawlerApprox(instance,Double.parseDouble(args[0]));
+		//double resultap =  lawlerap.SequenceJobs();
+    	//System.out.print(resultap);
 	}
     
 }
