@@ -166,10 +166,10 @@ plot(tfvals,maxtf(3,:)', 'r--');
 plot(tfvals,mintf(3,:)', 'r--');
 p3=plot(tfvals,meantf(5,:)','b');
 plot(tfvals,maxtf(5,:)', 'b--');
-plot(tfvals,mintf(5,:)', 'b--');
-p4=plot(tfvals,meantf(7,:)','c');
-plot(tfvals,maxtf(7,:)', 'c--');
-plot(tfvals,mintf(7,:)', 'c--');
+plot(mintf(5,:)', 'b--');
+p4=plot(meantf(7,:)','c');
+plot(maxtf(7,:)', 'c--');
+plot(mintf(7,:)', 'c--');
 xlabel('TF')
 ylabel('Tard')
 hold off;
