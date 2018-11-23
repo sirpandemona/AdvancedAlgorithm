@@ -34,7 +34,7 @@ public class ComputeTardiness {
 	}
 
     public static void main (String args[]) {
-    	args = new String[]{"1.1","instances/random_RDD=0.2_TF=0.2_#05.dat"};
+    	args = new String[]{"1.1","instances/random_RDD=0.2_TF=0.2_#15.dat"};
 		ProblemInstance instance = readInstance(args[1]);
 		
 		LawlerDP lawlerdp = new LawlerDP(instance);

@@ -241,12 +241,13 @@ public class LawlerDP {
 		sortJobsByDueTime();
 		
 		HashMap<String,Double> T = new HashMap<String,Double>();
+		HashMap<String,Integer> O = new HashMap<String,Integer>();
 		double totalCompletionTime = totalCompletionTime();
 		
 		ArrayList<int[]> states = new ArrayList<int[]>();
 		for(int i = 0; i < numJobs; i++)
 		{
-			for(int j = i-1; j < numJobs; j++)
+			for(int j = i; j < numJobs; j++)
 			{
 				for(int oldk = 0; oldk < numJobs; oldk++)
 				{
@@ -288,7 +289,7 @@ public class LawlerDP {
 							T.put(key, Double.MAX_VALUE);
 							int C = retrieveC(subset,k,t);
 							ArrayList<Integer> deltas = GenCandidateDeltas(subset,t);
-							int prevDelta = 0;
+							int prevDelta = -1;
 							for(int di  = 0;di<deltas.size();di++) {
 								int delta = deltas.get(di);
 								for(int pd = prevDelta+1 ;pd<delta;pd++) {
@@ -297,15 +298,55 @@ public class LawlerDP {
 								prevDelta = delta;
 								C += jobs[k+delta][0];
 								if(C <= totalCompletionTime) {
-									T.put(key, Math.min( T.get(key),	T.get(i + " - " + (k+delta) + " - " + k + " - " + t)		+
-																 		Math.max(0, C - jobs[k][1])									+
-																 		T.get((k+delta+1) + " - " + j + " - " + k + " - " + C)		));
+									double firstSubProblem;
+									double secondSubProblem;
+									if(i > k+delta) {
+										firstSubProblem = 0;
+									} else {
+										firstSubProblem = T.get(i + " - " + (k+delta) + " - " + k + " - " + t);
+									}
+									if(k+delta+1 > j) {
+										secondSubProblem = 0;
+									} else {
+										secondSubProblem = T.get((k+delta+1) + " - " + j + " - " + k + " - " + C);
+									}
+									double tardiness = firstSubProblem + Math.max(0, C - jobs[k][1]) + secondSubProblem;
+									if(tardiness < T.get(key)) {
+										T.put(key, tardiness);
+										O.put(key, k+delta);
+									}
 								}
 							}
 						}
 					}
 		}
+		
+		ArrayList<Integer> schedule = getSchedule(O,"0 - "+(jobs.length-1)+" - -1 - 0");
 
 		return T.get("0 - "+(jobs.length-1)+" - -1 - 0");
+	}
+	
+	public ArrayList<Integer> getSchedule(HashMap<String,Integer> O, String key) {
+		ArrayList<Integer> schedule = new ArrayList<Integer>();
+		String[] splitKey = key.split(" - ");
+		int i = Integer.parseInt(splitKey[0]);
+		int j = Integer.parseInt(splitKey[1]);
+		int oldk = Integer.parseInt(splitKey[2]);
+		int t = Integer.parseInt(splitKey[3]);
+		ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
+		if(subset.size() < 1) {
+			return new ArrayList<Integer>();
+		}
+		else if(subset.size() == 1) {
+			schedule.add(subset.get(0));
+			return schedule;
+		}
+		int optimalPosition = O.get(key);
+		int k = retrieveKPrime(subset);
+		int C = retrieveC(subset,k,t);
+		schedule.addAll(getSchedule(O,i + " - " + (optimalPosition-1) + " - " + k + " - " + t));
+		schedule.add(k);
+		schedule.addAll(getSchedule(O,(optimalPosition+1) + " - " + j + " - " + k + " - " + C));
+		return schedule;
 	}
 }
