@@ -47,8 +47,8 @@ public class ComputeTardiness {
 		//LawlerApprox lawler = new LawlerApprox(instance,Double.parseDouble(args[0]));
 		//double result =  lawler.SequenceJobs();
     	//System.out.print(result);
-    	runTests();
-    	//args = new String[]{"1.1","instances/random_RDD=0.2_TF=0.2_#05.dat"};
+    	//runTests();
+    	args = new String[]{"1.1","instances/random_RDD=0.2_TF=0.2_#05.dat"};
 		ProblemInstance instance = readInstance(args[1]);
 		
 		LawlerDP lawlerdp = new LawlerDP(instance);
