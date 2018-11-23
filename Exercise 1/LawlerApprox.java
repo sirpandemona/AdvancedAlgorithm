@@ -12,7 +12,7 @@ public class LawlerApprox {
 		
 	public LawlerApprox(ProblemInstance instance,double epsilon) {
 		numJobs = instance.getNumJobs();
-		jobs = instance.getJobs();
+		jobs = instance.getJobsDouble();
 		states = new HashMap<String,ArrayList<int[]>>();
 		jobMapping = new HashMap<String,ArrayList<Integer>>();
 		this.epsilon = epsilon;
