@@ -43,17 +43,17 @@ public class ComputeTardiness {
 
     public static void main (String args[]) {
     	
-    	//runTests();
-    	args = new String[]{"2.0","Exercise 1/instances/random_RDD=0.2_TF=0.2_#15.dat"};
-		ProblemInstance instance = readInstance(args[1]);
+    	runTests();
+    	//args = new String[]{"2.0","Exercise 1/instances/random_RDD=0.2_TF=0.2_#15.dat"};
+		/*ProblemInstance instance = readInstance(args[1]);
 		
-		LawlerDP lawlerdp = new LawlerDP(instance);
+		awlerDP lawlerdp = new LawlerDP(instance);
 		double resultdp = lawlerdp.SequenceJobsDynamic();
 		System.out.println(resultdp);
 		
 		LawlerApprox lawlerap = new LawlerApprox(instance,Double.parseDouble(args[0]));
 		double resultap =  lawlerap.SequenceJobs();
-    	System.out.print(resultap);
+    	System.out.print(resultap);*/
 	}
     
     public static void runTests() {
@@ -89,6 +89,7 @@ public class ComputeTardiness {
 				}
 				writer.append("\n");
     		}
+    		writer.flush();
  		}
     	writer.close();
     	}catch (IOException e) {
