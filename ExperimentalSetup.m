@@ -1,6 +1,6 @@
 %results = table2array(results);
-resultsold = table2array(results1);
-results = table2array(resultsunGen);
+%resultsold = table2array(results1);
+%results = table2array(resultsunGen);
 
 greedy = results(:, [4 5]);
 bestfirst = results(:, [6 7]);
@@ -13,12 +13,14 @@ psarr = {};
 meanps = [];
 maxps = [];
 minps = [];
+stdps = [];
 for n = nvals
     m = problemsizes(find(problemsizes(:,1) ==n),2:end);
     psarr{n} =m; 
     meanps(:,n) = mean(m);
     maxps(:,n) = max(m);
     minps(:,n) = min(m);
+    stdps(:,n)  = std(m);
 end
 
 figure;
@@ -70,7 +72,7 @@ rdarr = {};
 meanrd = [];
 maxrd = [];
 minrd = [];
-
+stdrd = [];
 for j = 1:size(rdvals,2)
     rd = rdvals(j);
     m = relativeduedates(find(relativeduedates(:,1) ==rd),2:end);
@@ -78,6 +80,7 @@ for j = 1:size(rdvals,2)
     meanrd(:,j) = mean(m);
     maxrd(:,j) = max(m);
     minrd(:,j) = min(m);
+    stdrd(:,j) = std(m);
 end
 
 figure;
@@ -129,7 +132,7 @@ tfarr = {};
 meantf = [];
 maxtf = [];
 mintf = [];
-
+stdtf = [];
 for j = 1:size(tfvals,2)
     tf = tfvals(j);
     m = tardinessfactor(find(tardinessfactor(:,1) ==tf),2:end);
@@ -137,7 +140,19 @@ for j = 1:size(tfvals,2)
     meantf(:,j) = mean(m);
     maxtf(:,j) = max(m);
     mintf(:,j) = min(m);
+    stdtf(:,j) = std(m);
 end
+M = []
+for j = 1:size(tfvals,2)
+   for k = 1: size(rdvals,2)
+        tf = tfvals(j);
+        rd = rdvals(k);
+        m = results(find((results(:,2) == rd) & (results(:,3) == tf)),7);
+        %M = [M;[tf rd mean(m)]];
+        M(j,k) = mean(m);
+   end
+end
+
 
 figure;
 hold on;
