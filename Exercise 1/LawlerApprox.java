@@ -46,7 +46,7 @@ public class LawlerApprox {
 		if(maxTardiness == 0) {
 			return 0;
 		}
-		double k = 2*epsilon/numJobs/(numJobs+1)*maxTardiness;
+		double k = ((2*epsilon)/(numJobs/numJobs+1))*maxTardiness;
 		double[][] scaledJobs = new double[numJobs][2];
 		for(int i = 0; i < numJobs; i++) {
 			scaledJobs[i][0] = Math.floor(jobs[i][0]/k);

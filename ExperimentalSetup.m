@@ -1,12 +1,13 @@
 %results = table2array(results);
-results = table2array(results1);
+resultsold = table2array(results1);
+results = table2array(resultsunGen);
 
 greedy = results(:, [4 5]);
 bestfirst = results(:, [6 7]);
 lawlerOpt = results(:,[8 9]);
 lawlerApx = results(:,[10 11]);
 
-problemsizes = results(:, [1 4 5 6 7 8 9 10 11]);
+problemsizes = resultsold(:, [1 4 5 6 7 8 9 10 11]);
 nvals = unique(problemsizes(:,1))';
 psarr = {};
 meanps = [];
@@ -62,7 +63,8 @@ legend([p1 p2 p3 p4],{'Greedy','Best First', 'Lawler-DP', 'Lawler-Apx'});
 set(gca,'YMinorTick','on','YScale','lin');
 title("Tardiness Score v.s. problem size ");
 
-relativeduedates = results(:, [2 4 5 6 7 8 9 10 11]);
+relativeduedates = results(:, [1 2 4 5 6 7 8 9 10 11]);
+relativeduedates = relativeduedates(find(relativeduedates(:,1) ==10),2:end); %only get size = 10
 rdvals = unique(relativeduedates(:,1))';
 rdarr = {};
 meanrd = [];
@@ -120,8 +122,8 @@ legend([p1 p2 p3 p4],{'Greedy','Best First', 'Lawler-DP', 'Lawler-Apx'});
 set(gca,'YMinorTick','on','YScale','lin');
 title("Tardiness Score v.s. Relative Due Date");
 
-tardinessfactor = results(:, [3 4 5 6 7 8 9 10 11]);
-
+tardinessfactor = results(:, [1 3 4 5 6 7 8 9 10 11]);
+tardinessfactor = tardinessfactor(find(tardinessfactor(:,1) ==10),2:end); %only get n=10
 tfvals = unique(tardinessfactor(:,1))';
 tfarr = {};
 meantf = [];

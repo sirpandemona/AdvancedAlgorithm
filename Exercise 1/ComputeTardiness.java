@@ -176,7 +176,7 @@ public class ComputeTardiness {
     } 
     
     public static ProblemInstance[] mutateTests(ProblemInstance instance) {
-    	int size = instance.getNumJobs();
+    	/*int size = instance.getNumJobs();
     	double[][] jobs = instance.getJobsDouble();
     	ProblemInstance[] res = new ProblemInstance[size];
     		for(int i = 0; i<size; i++) {
@@ -184,7 +184,9 @@ public class ComputeTardiness {
     			double[][] sJobs = Arrays.copyOfRange(jobs,0,sSize);
     			res[i] = new ProblemInstance(sSize,sJobs);
     		}
-    	
+    	*/
+    	ProblemInstance[] res = new ProblemInstance[1];
+    	res[0] = instance;
     	return res;
     }
 }
