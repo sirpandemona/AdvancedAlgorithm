@@ -54,7 +54,14 @@ public class LawlerApprox {
 		}
 		ProblemInstance scaledInstance = new ProblemInstance(numJobs,scaledJobs);
 		LawlerDP lawler = new LawlerDP(scaledInstance);
-		lawler.SequenceJobs();
-		return -1;
+		int[] schedule = lawler.GetSchedule();
+		double C = 0;
+		double tardiness = 0;
+		for(int i = 0; i < numJobs; i++)
+		{
+			C += jobs[schedule[i]][0];
+			tardiness += Math.max(0, C - jobs[schedule[i]][1]);
+		}
+		return tardiness;
 	}
 }
