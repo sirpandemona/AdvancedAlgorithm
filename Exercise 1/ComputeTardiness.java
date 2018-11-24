@@ -127,17 +127,17 @@ public class ComputeTardiness {
 			res[3] = greedySchedule.getTardiness();
 			res[4] = ((greedyEnd-greedyStart)/1000);
 			if(problemSize < 11) {
-			BestFirst bestFirst = new BestFirst(instance);
-	    	long bfStart = System.nanoTime();
-			Schedule bestFirstSchedule = bestFirst.getSchedule();
-			long bfEnd = System.nanoTime();
-			
-			res[5] = bestFirstSchedule.getTardiness();
-			res[6] = ((bfEnd-bfStart)/1000);
+				BestFirst bestFirst = new BestFirst(instance);
+		    	long bfStart = System.nanoTime();
+				Schedule bestFirstSchedule = bestFirst.getSchedule();
+				long bfEnd = System.nanoTime();
+				
+				res[5] = bestFirstSchedule.getTardiness();
+				res[6] = ((bfEnd-bfStart)/1000);
 			}
 			else {
-				res[5] = Double.MAX_VALUE;
-				res[6] = Double.MAX_VALUE;
+				res[5] = 0;
+				res[6] = 0;
 			}
 			
 			LawlerDP Lawler =new LawlerDP(instance);
@@ -150,8 +150,8 @@ public class ComputeTardiness {
 			double epsilon = 0.5;
 			LawlerApprox lawapx= new LawlerApprox(instance,epsilon);
 			long lawaStart = System.nanoTime();
-			//double LawleraTardiness = lawapx.SequenceJobs();
-			double LawleraTardiness = 0;
+			double LawleraTardiness = lawapx.SequenceJobs();
+			//double LawleraTardiness = 0;
 			long lawaEnd = System.nanoTime();
 			res[9] = LawleraTardiness;
 			res[10] =((lawaEnd-lawaStart)/1000);

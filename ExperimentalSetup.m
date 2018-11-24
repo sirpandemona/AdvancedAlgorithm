@@ -1,11 +1,13 @@
 %results = table2array(results);
+results = table2array(results1);
+
 greedy = results(:, [4 5]);
 bestfirst = results(:, [6 7]);
 lawlerOpt = results(:,[8 9]);
 lawlerApx = results(:,[10 11]);
 
 problemsizes = results(:, [1 4 5 6 7 8 9 10 11]);
-nvals = unique(sortsize(:,1))';
+nvals = unique(problemsizes(:,1))';
 psarr = {};
 meanps = [];
 maxps = [];
