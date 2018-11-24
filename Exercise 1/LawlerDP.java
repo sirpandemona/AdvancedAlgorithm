@@ -236,7 +236,30 @@ public class LawlerDP {
 		return T.get("0 - "+(jobs.length-1)+" - -1 - 0");
 	}
 	
-	public double SequenceJobsDynamic()
+	public void makeSchedule(ArrayList<Integer> schedule,HashMap<String,Integer> O, String key) {
+		String[] splitKey = key.split(" - ");
+		int i = Integer.parseInt(splitKey[0]);
+		int j = Integer.parseInt(splitKey[1]);
+		int oldk = Integer.parseInt(splitKey[2]);
+		int t = Integer.parseInt(splitKey[3]);
+		ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
+		if(subset.size() < 1) {
+			return;
+		}
+		else if(subset.size() == 1) {
+			schedule.add(subset.get(0));
+			return;
+		}
+		int optimalPosition = O.get(key);
+		int k = retrieveKPrime(subset);
+		int C = retrieveC(subset,k,t);
+		makeSchedule(schedule,O,i + " - " + (optimalPosition) + " - " + k + " - " + t);
+		schedule.add(k);
+		makeSchedule(schedule,O,(optimalPosition+1) + " - " + j + " - " + k + " - " + C);
+		return;
+	}
+	
+	public String SequenceJobsDynamic(boolean outputSchedule)
 	{
 		sortJobsByDueTime();
 		
@@ -321,32 +344,35 @@ public class LawlerDP {
 					}
 		}
 		
-		ArrayList<Integer> schedule = getSchedule(O,"0 - "+(jobs.length-1)+" - -1 - 0");
-
-		return T.get("0 - "+(jobs.length-1)+" - -1 - 0");
+		if(outputSchedule)
+		{
+			ArrayList<Integer> schedule = new ArrayList<Integer>();
+			makeSchedule(schedule,O,"0 - "+(jobs.length-1)+" - -1 - 0");
+			String s = "";
+			for(int j : schedule) {
+				s += j + ",";
+			}
+			return s;
+		}
+		else
+		{
+			return T.get("0 - "+(jobs.length-1)+" - -1 - 0").toString();
+		}		
 	}
 	
-	public ArrayList<Integer> getSchedule(HashMap<String,Integer> O, String key) {
-		ArrayList<Integer> schedule = new ArrayList<Integer>();
-		String[] splitKey = key.split(" - ");
-		int i = Integer.parseInt(splitKey[0]);
-		int j = Integer.parseInt(splitKey[1]);
-		int oldk = Integer.parseInt(splitKey[2]);
-		int t = Integer.parseInt(splitKey[3]);
-		ArrayList<Integer> subset = retrieveSubset(i,j,oldk);
-		if(subset.size() < 1) {
-			return new ArrayList<Integer>();
+	public double SequenceJobsDynamic()
+	{
+		return Double.parseDouble(SequenceJobsDynamic(false));
+	}
+	
+	public int[] GetSchedule()
+	{
+		String[] s = SequenceJobsDynamic(true).split(",");
+		int[] arr = new int[s.length];
+		for(int i = 0; i < s.length; i++)
+		{
+			arr[i] = Integer.parseInt(s[i]);
 		}
-		else if(subset.size() == 1) {
-			schedule.add(subset.get(0));
-			return schedule;
-		}
-		int optimalPosition = O.get(key);
-		int k = retrieveKPrime(subset);
-		int C = retrieveC(subset,k,t);
-		schedule.addAll(getSchedule(O,i + " - " + (optimalPosition-1) + " - " + k + " - " + t));
-		schedule.add(k);
-		schedule.addAll(getSchedule(O,(optimalPosition+1) + " - " + j + " - " + k + " - " + C));
-		return schedule;
+		return arr;
 	}
 }
