@@ -1,4 +1,4 @@
-%results = table2array(results);
+results = table2array(results2);
 %resultsold = table2array(results1);
 %results = table2array(resultsunGen);
 
@@ -7,36 +7,37 @@ bestfirst = results(:, [6 7]);
 lawlerOpt = results(:,[8 9]);
 lawlerApx = results(:,[10 11]);
 
-problemsizes = resultsold(:, [1 4 5 6 7 8 9 10 11]);
+problemsizes = results(:, [1 4 5 6 7 8 9 10 11]);
 nvals = unique(problemsizes(:,1))';
 psarr = {};
 meanps = [];
 maxps = [];
 minps = [];
 stdps = [];
-for n = nvals
+for j = 1:size(nvals,2)
+    n = nvals(j);
     m = problemsizes(find(problemsizes(:,1) ==n),2:end);
-    psarr{n} =m; 
-    meanps(:,n) = mean(m);
-    maxps(:,n) = max(m);
-    minps(:,n) = min(m);
-    stdps(:,n)  = std(m);
+    psarr{j} =m; 
+    meanps(:,j) = mean(m);
+    maxps(:,j) = max(m);
+    minps(:,j) = min(m);
+    stdps(:,j)  = std(m);
 end
 
 figure;
 hold on;
-p1=  plot(meanps(2,:)','g');    
-plot(maxps(2,:)', 'g--');
-plot(minps(2,:)', 'g--');
-p2=plot(meanps(4,:)','r');
-plot(maxps(4,:)', 'r--');
-plot(minps(4,:)', 'r--');
-p3=plot(meanps(6,:)','b');
-plot(maxps(6,:)', 'b--');
-plot(minps(6,:)', 'b--');
-p4=plot(meanps(8,:)','c');
-plot(maxps(8,:)', 'c--');
-plot(minps(8,:)', 'c--');
+p1=  plot(nvals,meanps(2,:)','g');    
+plot(nvals,maxps(2,:)', 'g--');
+plot(nvals,minps(2,:)', 'g--');
+p2=plot(nvals,meanps(4,:)','r');
+plot(nvals,maxps(4,:)', 'r--');
+plot(nvals,minps(4,:)', 'r--');
+p3=plot(nvals,meanps(6,:)','b');
+plot(nvals,maxps(6,:)', 'b--');
+plot(nvals,minps(6,:)', 'b--');
+p4=plot(nvals,meanps(8,:)','c');
+plot(nvals,maxps(8,:)', 'c--');
+plot(nvals,minps(8,:)', 'c--');
 xlabel('n')
 ylabel('ms')
 hold off;
@@ -46,18 +47,18 @@ title("Runtime v.s. problem size")
 
 figure;
 hold on;
-p1=  plot(meanps(1,:)','g');
-plot(maxps(1,:)', 'g--');
-plot(minps(1,:)', 'g--');
-p2=plot(meanps(3,:)','r');
-plot(maxps(3,:)', 'r--');
-plot(minps(3,:)', 'r--');
-p3=plot(meanps(5,:)','b');
-plot(maxps(5,:)', 'b--');
-plot(minps(5,:)', 'b--');
-p4=plot(meanps(7,:)','c');
-plot(maxps(7,:)', 'c--');
-plot(minps(7,:)', 'c--');
+p1=  plot(nvals,meanps(1,:)','g');
+plot(nvals,maxps(1,:)', 'g--');
+plot(nvals,minps(1,:)', 'g--');
+p2=plot(nvals,meanps(3,:)','r');
+plot(nvals,maxps(3,:)', 'r--');
+plot(nvals,minps(3,:)', 'r--');
+p3=plot(nvals,meanps(5,:)','b');
+plot(nvals,maxps(5,:)', 'b--');
+plot(nvals,minps(5,:)', 'b--');
+p4=plot(nvals,meanps(7,:)','c');
+plot(nvals,maxps(7,:)', 'c--');
+plot(nvals,minps(7,:)', 'c--');
 xlabel('n')
 ylabel('Tard')
 hold off;

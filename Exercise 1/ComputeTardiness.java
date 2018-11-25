@@ -45,15 +45,16 @@ public class ComputeTardiness {
     	
     	runTests();
     	//args = new String[]{"2.0","Exercise 1/instances/random_RDD=0.2_TF=0.2_#15.dat"};
-		/*ProblemInstance instance = readInstance(args[1]);
+    	//double epsilon = args[0];
+		ProblemInstance instance = readInstance(args[1]);
 		
-		awlerDP lawlerdp = new LawlerDP(instance);
-		double resultdp = lawlerdp.SequenceJobsDynamic();
-		System.out.println(resultdp);
+		//LawlerDP lawlerdp = new LawlerDP(instance);
+		//double resultdp = lawlerdp.SequenceJobsDynamic();
+		//System.out.println(resultdp);
 		
 		LawlerApprox lawlerap = new LawlerApprox(instance,Double.parseDouble(args[0]));
 		double resultap =  lawlerap.SequenceJobs();
-    	System.out.print(resultap);*/
+    	System.out.print(resultap);
 	}
     
     public static void runTests() {
@@ -144,7 +145,7 @@ public class ComputeTardiness {
 			res[7] = LawlerTardiness;
 			res[8] = ((lawEnd-lawStart)/1000);
 			
-			double epsilon = 0.5;
+			double epsilon = 0.1;
 			LawlerApprox lawapx= new LawlerApprox(instance,epsilon);
 			long lawaStart = System.nanoTime();
 			double LawleraTardiness = lawapx.SequenceJobs();
