@@ -1,0 +1,32 @@
+function [lowerbounds,upperbounds] = randomizedRounding(graph)
+    % Step 1. Solve (RP) via (SDP)   =>   v_i, i = 1,...,n.
+    
+    V = ichol(Y);
+    % Step 2. Generate a random vector r \in R^n such that ||r|| = 1.
+    cutvalue = 0;
+    while cutvalue < 0.878*opt
+        ra = randn(1,n);
+        r = ra./sqrt(ra*ra');
+        % Step 3. “Round” by letting S = {i \in V | v_i * r >= 0}.
+        S = zeros(1,n);
+        for i = 1:size(V,1)
+            v = V(i,:);
+            if v*r >= 0
+                S(i) = -1;
+            else
+                S(i) = 1;
+            end
+        end
+        s = 0;
+        for i = 1:size(V,1)
+            for j = i+1:size(V,1)
+                s = s + W(i,j)*(1-Y(i,j));
+            end
+        end
+        cutvalue = s/2;
+        % Step 4. Check if value of cut is >= 0.878* optimal value of (SDP). If not, go to 2.
+    end
+    lowerbounds = cutvalue;
+    upperbounds = opt;
+end
+
