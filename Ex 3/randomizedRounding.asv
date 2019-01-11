@@ -4,7 +4,7 @@ function [lowerbounds,upperbounds] = randomizedRounding(n,G)
     for i = 1:size(G,1)
         W(G(i,1),G(i,2)) = G(i,3);
     end
-    [Y,opt] = calc_spd(n,G,W);
+    [Y,opt] = calc_spd(n,G);
     V = iCf(Y);
     % Step 2. Generate a random vector r \in R^n such that ||r|| = 1.
     cutvalue = 0;
@@ -24,7 +24,7 @@ function [lowerbounds,upperbounds] = randomizedRounding(n,G)
         s = 0;
         for i = 1:size(V,1)
             for j = i+1:size(V,1)
-                s = s + W(i,j)*(1-S(i).*S(j));
+                s = s + W(i,j)*(1-Y(i,j));
             end
         end
         cutvalue = s/2;
