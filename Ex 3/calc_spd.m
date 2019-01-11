@@ -6,11 +6,11 @@ function [A,h,t] = calc_spd(n,G)
     end
     ops = sdpsettings('solver','sedumi');
     A = sdpvar(n,n);
-    WA = w-w*A;
-    h = 0.5*sum(sum(tril(WA)));
+    WA = w-w.*A;
+    h = 0.5*sum(sum(WA));
     c = [diag(A) == ones(n,1), A >= 0];
     sol = solvesdp(c, -h, ops);
     A = double(A)
-    h = double(-h)
+    h = double(h)
     t = sol.solvertime
 end
