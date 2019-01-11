@@ -3,6 +3,10 @@ function [lowerbounds,upperbounds,t] = randomizedRounding(n,G)
     [Y,opt,~] = calc_spd(n,G);
     V = ichol(Y);
     % Step 2. Generate a random vector r \in R^n such that ||r|| = 1.
+    W = zeros(n,n);
+    for i = 1:size(G,1)
+        W(G(i,1),G(i,2)) = G(i,3);
+    end
     cutvalue = 0;
     while cutvalue < 0.878*opt
         ra = randn(1,n);
