@@ -1,6 +1,6 @@
-function [lowerbounds,upperbounds] = randomizedRounding(graph)
+function [lowerbounds,upperbounds,t] = randomizedRounding(n,G)
     % Step 1. Solve (RP) via (SDP)   =>   v_i, i = 1,...,n.
-    
+    [Y,opt,~] = calc_spd(n,G);
     V = ichol(Y);
     % Step 2. Generate a random vector r \in R^n such that ||r|| = 1.
     cutvalue = 0;
@@ -28,5 +28,6 @@ function [lowerbounds,upperbounds] = randomizedRounding(graph)
     end
     lowerbounds = cutvalue;
     upperbounds = opt;
+    t = sol.solvertime;
 end
 
