@@ -1,0 +1,6 @@
+function A = calc_spd(n,G)
+    w = zeros(n,n);
+    for i = 1:n 
+        []
+    end
+end
