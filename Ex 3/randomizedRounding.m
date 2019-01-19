@@ -1,4 +1,4 @@
-function [lowerbounds,upperbounds] = randomizedRounding(n,G)
+function [lowerbounds,upperbounds, T] = randomizedRounding(n,G)
     % Step 1. Solve (RP) via (SDP)   =>   v_i, i = 1,...,n.
     W = zeros(n,n);
     for i = 1:size(G,1)
@@ -8,7 +8,9 @@ function [lowerbounds,upperbounds] = randomizedRounding(n,G)
     V = iCf(Y);
     % Step 2. Generate a random vector r \in R^n such that ||r|| = 1.
     cutvalue = 0;
+    T = 0;
     while cutvalue < 0.878*opt
+        T = T +1;
         ra = randn(n,1);
         r = ra./sqrt(ra'*ra);
         % Step 3. “Round” by letting S = {i \in V | v_i * r >= 0}.
