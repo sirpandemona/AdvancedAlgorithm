@@ -1,11 +1,11 @@
 %init variables
 %W = [1 5 10 25 50 100];
-N = [5 10 20 30 40 50 60 70];
-W = [1 5 25 50 100 250];
-%N = [5 10 15 20 25 30 40 50];
-I = 5;
+%N = [5 10 20 30 40 50 60 70];
+W = [5 25 50 100 250];
+N = [5 10 15 20 25 30 40 50];
+I = 3;
 P = [0.5 1];
-T = [5 10 20 30 40 50 60];
+T = [1 5 10 25 50 100 ];
 genNewData = false;
 
 %get size of variable vectors
@@ -63,7 +63,7 @@ createfigure(N, nprts, {'Runtime against amount of nodes for different p'}, {'N'
 nwrts = squeeze(mean(mrts,3));
 nwrts = squeeze(mean(nwrts,3));
 %plot(N,nwrts);
-createfigure(N, nwrts, {'Runtime against amount of nodes for different W'}, {'N'},{'Runtime(s)'}, {'W=1','W = 5', 'W =25','W=50','W=100','W=250'})
+createfigure(N, nwrts, {'Runtime against amount of nodes for different W'}, {'N'},{'Runtime(s)'}, {'W = 5', 'W =25','W=50','W=100','W=250'})
 
 %plot runtime against t
 trts = squeeze(mean(mrts));
@@ -83,9 +83,10 @@ nubs = squeeze(mean(mubs));
 nubs = squeeze(mean(nubs,3));
 nubs = squeeze(mean(nubs,2));
 %plot(N,[nubs nlbs]);
-createfigure(N, [nubs nlbs], {'Value of upper and lower bounds against amount of nodes '}, {'N'},{'Value'}, {'upper bound', 'lower bound'})
+createfigure(N, [nubs nlbs], {'Value of upper and lower bounds against amount of nodes '}, {'N'},{'Value'}, {'u', 'p = 1'})
 
 %plot lower + upperbound against w
+figure;
 
 wlbs = squeeze(mean(mlbs,3));
 wlbs = squeeze(mean(wlbs,3));
@@ -94,10 +95,10 @@ wlbs = squeeze(mean(wlbs,2));
 wubs = squeeze(mean(mubs,3));
 wubs = squeeze(mean(wubs,3));
 wubs = squeeze(mean(wubs,2));
-%plot(W,[wubs wlbs]);
-createfigure(W, [wubs wlbs], {'Value of upper and lower bounds against weight '}, {'W'},{'Value'}, {'upper bound', 'lower bound'})
+plot(W,[wubs wlbs]);
 
 %plot lower + upperbound against T
+figure;
 
 tlbs = squeeze(mean(mlbs));
 tlbs = squeeze(mean(tlbs));
@@ -106,8 +107,7 @@ tlbs = squeeze(mean(tlbs));
 tubs = squeeze(mean(mubs));
 tubs = squeeze(mean(tubs));
 tubs = squeeze(mean(tubs));
-%plot(T,[tubs' tlbs']);
-createfigure(T, [tubs tlbs], {'Value of upper and lower bounds against T '}, {'T'},{'Value'}, {'upper bound', 'lower bound'})
+plot(T,[tubs' tlbs']);
 
 function createfigure(X1, YMatrix1, tit, xlab,ylab, displaynames)
 figure1 = figure;
